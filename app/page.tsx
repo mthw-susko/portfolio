@@ -1,103 +1,205 @@
-import Image from "next/image";
+"use client";
+
+import MarbleScene from "./components/MarbleScene";
+import ShaderText from "./components/ShaderText";
+import { useEffect, useMemo, useRef, useState, useLayoutEffect } from "react";
+import React from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useRouter } from "next/navigation";
+
+gsap.registerPlugin(ScrollTrigger);
+
+const personalProjects = [
+  { name: "METRONOMICS", category: "WEB", href: "/projects/metronomics-redesign" },
+  { name: "QWEB", category: "WEB", href: "/projects/qweb-redesign" },
+  { name: "QGDC", category: "WEB", href: "/projects/qgdc-redesign" },
+  { name: "QSWAP", category: "IOS", href: "/projects/qswap" },
+  { name: "HOTTAKE", category: "IOS", href: "/projects/hottake " },
+  { name: "MINTY PI", category: "HARDWARE", href: "/projects/mintypi" },
+  { name: "RABBIT R1", category: "OS", href: "/projects/rabbit-r1" },
+];
+const allProjects = [...personalProjects];
+
+const getCategoryGroup = (category: string) => {
+  if (['OS', 'HARDWARE'].includes(category)) return 'OS_HARDWARE';
+  return category;
+};
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  // --- All your existing state and refs ---
+  const projectColors = useMemo(() => ['#ff6b6b', '#f0e68c', '#87ceeb', '#98fb98', '#dda0dd', '#ffA500', '#ffc0cb'], []);
+  const [hoveredIndex, setHoveredIndex] = useState(-1);
+  const socials = [{ name: "LINKEDIN", href: "https://www.linkedin.com/in/matthew-mb-susko/" }, { name: "MAIL", href: "mailto:matthew@susko.ca" }, { name: "GITHUB", href: "https://github.com/mthw-susko" }];
+  const [fontSize, setFontSize] = useState(5);
+  const main = useRef<HTMLDivElement>(null);
+  const marbleSceneWrapper = useRef<HTMLDivElement>(null);
+  const worksSectionRef = useRef<HTMLElement>(null);
+  const aboutSectionRef = useRef<HTMLElement>(null);
+  const marbleSceneContainerRef = useRef<HTMLDivElement>(null);
+  
+  // NEW: State to control when the page fades in and out
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isExiting, setIsExiting] = useState(false);
+  const router = useRouter();
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  // NEW: Effect to trigger the fade-in after the component has mounted
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 100); 
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // NEW: Click handler for fade-out navigation
+  const handleLinkClick = (href: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    setIsExiting(true);
+    setTimeout(() => {
+        router.push(href);
+    }, 700); // Match transition duration
+  };
+
+
+  // --- All your existing useLayoutEffect and useEffect hooks ---
+  useLayoutEffect(() => {
+    if (!main.current || !marbleSceneWrapper.current || !worksSectionRef.current || !marbleSceneContainerRef.current || !aboutSectionRef.current) {
+      return;
+    }
+    const targetContainer = marbleSceneContainerRef.current;
+    const aboutSection = aboutSectionRef.current;
+    const ctx = gsap.context(() => {
+      const finalWidth = targetContainer.offsetWidth;
+      const finalX = targetContainer.offsetLeft - (window.innerWidth - finalWidth) / 2;
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: worksSectionRef.current,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 2,
+          pin: marbleSceneWrapper.current,
+          pinSpacing: false,
+          invalidateOnRefresh: true,
+        },
+      });
+      tl.fromTo(marbleSceneWrapper.current, { x: 0, y: 0, scale: 1 }, { x: finalX, y: 0, scale: 1, ease: "power1.inOut" });
+      
+      const tl2 = gsap.timeline({
+        scrollTrigger: {
+            trigger: aboutSection,
+            start: "top bottom",
+            end: "top top",
+            scrub: 2,
+        },
+      });
+      tl2.to(marbleSceneWrapper.current, { x: 0, y: 0, scale: 1, autoAlpha: 0, ease: "power1.inOut" });
+    }, main);
+    return () => ctx.revert();
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) { setFontSize(2); } 
+      else if (window.innerWidth < 1024) { setFontSize(3); } 
+      else { setFontSize(4); }
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return (
+    <>
+      <main 
+        ref={main} 
+        className={`flex flex-col items-center min-h-screen py-24 px-4 pointer-events-none transition-opacity duration-700 ease-in ${isLoaded && !isExiting ? 'opacity-100' : 'opacity-0'}`}
+      >
+        <section className="text-center mt-36 min-w-screen]">
+          <div className="min-w-96">
+            <ShaderText fontSize={fontSize} height={"50vh"} lineHeight={0.8}>
+              {`Matthew\nSusko`}
+            </ShaderText>
+            <p className="font-helvetica text-base uppercase lg:max-w-2/3 sm:min-w-1 mx-auto">
+              A Canada-based computer scientist specializing in all things user
+              experience, design, and interaction
+            </p>
+          </div>
+        </section>
+        
+        <div ref={marbleSceneWrapper} className="fixed top-0 left-0 w-full h-full z-[-1]">
+          <MarbleScene
+            hoveredIndex={hoveredIndex}
+            hoverColor={hoveredIndex !== -1 ? projectColors[hoveredIndex] : null}
+          />
         </div>
+
+        <section ref={worksSectionRef} id="works" className="pt-[150px] w-full flex justify-center items-center gap-16 px-36 relative z-10 bg-transparent">
+          <div className="w-1/2">
+            <div className="max-w-64">
+              <ShaderText fontSize={1} height={"15vh"} lineHeight={1} textAlign="left">
+                {`SELECTED\nWORKS`}
+              </ShaderText>
+            </div>
+            <div>
+              <div className="flex flex-col">
+                {allProjects.map((project, index) => {
+                  const currentGroup = getCategoryGroup(project.category);
+                  const prevGroup = index > 0 ? getCategoryGroup(allProjects[index - 1].category) : null;
+                  const addMargin = prevGroup && currentGroup !== prevGroup;
+
+                  return (
+                    <React.Fragment key={project.name}>
+                      <a
+                        href={project.href}
+                        onClick={handleLinkClick(project.href)}
+                        onMouseEnter={() => setHoveredIndex(index)}
+                        onMouseLeave={() => setHoveredIndex(-1)}
+                        className={`flex w-fit text-lg uppercase hover:opacity-75 transition-opacity pointer-events-auto ${addMargin ? 'mt-4' : ''}`}>
+                        <span>{project.name}&nbsp;</span>
+                        <span className="text-gray-400">{"// " + project.category}</span>
+                      </a>
+                    </React.Fragment>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+          <div ref={marbleSceneContainerRef} id="marble-scene-container" className="w-1/2 h-[700px]">
+          </div>
+        </section>
+
+        <section ref={aboutSectionRef} className="mt-[800px] w-full max-w-2/3 text-center">
+            <ShaderText fontSize={3} height={"40vh"} lineHeight={1} textAlign="left">
+              {"MORE ABOUT ME"}
+            </ShaderText>
+          <p className=" text-base uppercase leading-relaxed text-left max-w-5/6 mx-auto mt-[-60px]">
+            I&apos;m a final-year Computer Science student at Queen&apos;s University, specializing in Software Design. My passion lies at the intersection of creativity and utility—specifically in UI/UX design, where I can apply my <strong>lifelong love of drawing</strong> to build software that <strong>genuinely improves people&apos;s lives</strong>.
+            <br/><br/>
+            Originally from Whistler, BC, my background is also shaped by a decade as a competitive national gymnast. The <strong>discipline, precision, and iterative process</strong> required to perfect a routine are the same principles I now bring to designing <strong>intuitive and elegant user experiences</strong>. I thrive on <strong>creating, experimenting, and ultimately, empowering users</strong>.
+            <br/><br/>
+            I am <strong>always looking for new opportunities</strong> to collaborate on exciting projects. If you&apos;d like to get in touch, please feel free to send me an email at <a href="mailto:matthew@susko.ca" className="underline pointer-events-auto">matthew@susko.ca</a>.
+          </p>
+        </section>
+
+        <section className="mt-48 w-full">
+          <h2 className="text-sm tracking-widest uppercase text-center">Socials</h2>
+          <div className="flex justify-center items-center gap-12 mt-8">
+            {socials.map((social) => (
+              <a
+                href={social.href}
+                key={social.name}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm tracking-widest uppercase hover:opacity-75 transition-opacity pointer-events-auto"
+              >
+                {social.name}
+              </a>
+            ))}
+          </div>
+        </section>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+    </>
   );
 }
