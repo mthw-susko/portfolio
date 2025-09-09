@@ -69,33 +69,47 @@ export default function Home() {
     }
     const targetContainer = marbleSceneContainerRef.current;
     const aboutSection = aboutSectionRef.current;
+    
     const ctx = gsap.context(() => {
-      const finalWidth = targetContainer.offsetWidth;
-      const finalX = targetContainer.offsetLeft - (window.innerWidth - finalWidth) / 2;
+      const mm = gsap.matchMedia();
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: worksSectionRef.current,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 2,
-          pin: marbleSceneWrapper.current,
-          pinSpacing: false,
-          invalidateOnRefresh: true,
-        },
+      mm.add({
+        isMobile: "(max-width: 767px)",
+        isDesktop: "(min-width: 768px)"
+      }, (context) => {
+        const { isDesktop } = context.conditions as { isDesktop: boolean };
+
+        if (isDesktop) {
+          const finalWidth = targetContainer.offsetWidth;
+          const finalX = targetContainer.offsetLeft - (window.innerWidth - finalWidth) / 2;
+
+          const tl = gsap.timeline({
+            scrollTrigger: {
+              trigger: worksSectionRef.current,
+              start: "top top",
+              end: "bottom bottom",
+              scrub: 2,
+              pin: marbleSceneWrapper.current,
+              pinSpacing: false,
+              invalidateOnRefresh: true,
+            },
+          });
+          tl.fromTo(marbleSceneWrapper.current, { x: 0, y: 0, scale: 1 }, { x: finalX, y: 0, scale: 1, ease: "power1.inOut" });
+        }
+        
+        // This timeline will be active for all screen sizes
+        const tl2 = gsap.timeline({
+          scrollTrigger: {
+              trigger: aboutSection,
+              start: "top bottom",
+              end: "top top",
+              scrub: 2,
+          },
+        });
+        tl2.to(marbleSceneWrapper.current, { x: 0, y: 0, scale: 1, autoAlpha: 0, ease: "power1.inOut" });
       });
-      tl.fromTo(marbleSceneWrapper.current, { x: 0, y: 0, scale: 1 }, { x: finalX, y: 0, scale: 1, ease: "power1.inOut" });
-      
-      const tl2 = gsap.timeline({
-        scrollTrigger: {
-            trigger: aboutSection,
-            start: "top bottom",
-            end: "top top",
-            scrub: 2,
-        },
-      });
-      tl2.to(marbleSceneWrapper.current, { x: 0, y: 0, scale: 1, autoAlpha: 0, ease: "power1.inOut" });
     }, main);
+    
     return () => ctx.revert();
   }, []);
 
@@ -135,9 +149,9 @@ export default function Home() {
           />
         </div>
 
-        <section ref={worksSectionRef} id="works" className="pt-[150px] w-full flex justify-center items-center gap-16 px-36 relative z-10 bg-transparent">
-          <div className="w-1/2">
-            <div className="max-w-64">
+        <section ref={worksSectionRef} id="works" className="lg:pt-[150px] w-full flex justify-center items-center gap-16 px-4 sm:px-8 md:px-16 lg:px-24 xl:px-36 relative z-10 bg-transparent">
+          <div className="md:w-1/2 lg:w-5/6">
+            <div className="max-w-64 w-full">
               <ShaderText fontSize={1} height={"15vh"} lineHeight={1} textAlign="left">
                 {`SELECTED\nWORKS`}
               </ShaderText>
@@ -170,11 +184,13 @@ export default function Home() {
           </div>
         </section>
 
-        <section ref={aboutSectionRef} className="mt-[800px] w-full max-w-2/3 text-center">
-            <ShaderText fontSize={3} height={"40vh"} lineHeight={1} textAlign="left">
-              {"MORE ABOUT ME"}
-            </ShaderText>
-          <p className=" text-base uppercase leading-relaxed text-left max-w-5/6 mx-auto mt-[-60px]">
+        <section ref={aboutSectionRef} className="lg:mt-[800px] w-full px-4 sm:px-8 md:px-16 lg:px-24 xl:px-36 text-center">
+            <div className="w-full">
+              <ShaderText fontSize={(fontSize-1.2)} height={"40vh"} lineHeight={1} textAlign="left">
+                {"MORE ABOUT ME"}
+              </ShaderText>
+            </div>
+          <p className=" text-base uppercase leading-relaxed text-left md:max-w-full lg:max-w-3/4 mx-auto mt-[-60px]">
             I&apos;m a final-year Computer Science student at Queen&apos;s University, specializing in Software Design. My passion lies at the intersection of creativity and utility—specifically in UI/UX design, where I can apply my <strong>lifelong love of drawing</strong> to build software that <strong>genuinely improves people&apos;s lives</strong>.
             <br/><br/>
             Originally from Whistler, BC, my background is also shaped by a decade as a competitive national gymnast. The <strong>discipline, precision, and iterative process</strong> required to perfect a routine are the same principles I now bring to designing <strong>intuitive and elegant user experiences</strong>. I thrive on <strong>creating, experimenting, and ultimately, empowering users</strong>.

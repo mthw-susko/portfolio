@@ -133,7 +133,7 @@ export default function ProjectPage() {
         // Recalculate maxScroll on each wheel event
         const maxScroll = element.scrollWidth - element.clientWidth;
         
-        targetScroll.current += e.deltaY;
+        targetScroll.current += e.deltaY + e.deltaX;
         targetScroll.current = Math.max(0, Math.min(targetScroll.current, maxScroll));
 
         if (animationFrameId.current === null) {
@@ -182,7 +182,7 @@ export default function ProjectPage() {
       ref={scrollRef} 
       className={`h-screen w-full overflow-x-auto overflow-y-hidden whitespace-nowrap no-scrollbar transition-opacity duration-500 ${isExiting ? 'page-fade-out' : 'page-fade-in'} ${areImagesLoaded ? 'opacity-100' : 'opacity-0'}`}
     >
-      <div className="inline-flex h-full items-center gap-12 px-8 md:px-16">
+      <div className="inline-flex h-full items-center gap-12 px-5 md:px-16">
         {/* Fixed close button at the top right */}
         <Link
           href="/#works"
@@ -200,8 +200,8 @@ export default function ProjectPage() {
         </Link>
 
         {/* Panel 1: Project Details */}
-        <section className="h-full inline-flex flex-col justify-center align-top flex-shrink-0 w-auto max-w-[50vw] mr-20 whitespace-normal"> 
-          <div className="w-full max-w-md">
+        <section className="inline-flex flex-col justify-center align-top flex-shrink-0 w-screen sm:w-auto sm:max-w-[50vw] mr-20 whitespace-normal overflow-y-auto py-24 no-scrollbar"> 
+          <div className="w-full lg:max-w-md">
             <h1 className={`font-imperial text-4xl leading-tight transition-all duration-500 ease-out ${isTitleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
               {project.title}
             </h1>

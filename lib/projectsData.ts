@@ -41,7 +41,7 @@ export const projectsData: Project[] = [
       stack: 'REACT NATIVE, FIREBASE, TYPESCRIPT, NODE.JS',
       year: '2025',
     },
-    images: ['/images/qswap-1.png', '/images/qswap-2.png', '/images/qswap-3.png', '/images/qswap-4.png', '/images/qswap-5.png', '/images/qswap-6.png', '/images/qswap-7.png'],
+    images: ['/images/qswap-1.png', '/images/qswap-2.png', '/images/qswap-3.PNG', '/images/qswap-4.PNG', '/images/qswap-5.PNG', '/images/qswap-6.PNG', '/images/qswap-7.PNG'],
   },
   {
     slug: 'hottake',

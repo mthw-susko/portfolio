@@ -153,7 +153,7 @@ export default function ShaderText({
   textAlign = "center",
 }: ShaderTextProps) {
   return (
-    <div style={{ height, width: "100%" }}>
+    <div style={{ height }} className="w-full">
       <Canvas>
         <OrthographicCamera makeDefault position={[0, 0, 100]} zoom={50} />
         <Scene fontSize={fontSize} lineHeight={lineHeight} textAlign={textAlign}>
