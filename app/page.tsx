@@ -14,6 +14,7 @@ const personalProjects = [
   { name: "METRONOMICS", category: "WEB", href: "/projects/metronomics-redesign" },
   { name: "QWEB", category: "WEB", href: "/projects/qweb-redesign" },
   { name: "QGDC", category: "WEB", href: "/projects/qgdc-redesign" },
+  { name: "REARVIEW", category: "IOS", href: "/projects/rearview" },
   { name: "QSWAP", category: "IOS", href: "/projects/qswap" },
   { name: "HOTTAKE", category: "IOS", href: "/projects/hottake " },
   { name: "MINTY PI", category: "HARDWARE", href: "/projects/mintypi" },

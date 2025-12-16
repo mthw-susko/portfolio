@@ -9,13 +9,13 @@ import Link from "next/link";
 import React from "react";
 
 // A new component to handle the fade-in animation for each image.
-const ProjectImage = ({ src, alt, scrollContainerRef, onImageLoad }: { src: string; alt: string; scrollContainerRef: React.RefObject<HTMLDivElement | null>; onImageLoad: () => void; }) => {
+const ProjectImage = ({ src, alt, scrollContainerRef, onImageLoad, areAllImagesLoaded }: { src: string; alt: string; scrollContainerRef: React.RefObject<HTMLDivElement | null>; onImageLoad: (src: string) => void; areAllImagesLoaded: boolean; }) => {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Ensure the scroll container ref is available before setting up the observer.
-    if (!scrollContainerRef.current) return;
+    // Only set up intersection observer after all images are loaded
+    if (!areAllImagesLoaded || !scrollContainerRef.current) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -44,13 +44,13 @@ const ProjectImage = ({ src, alt, scrollContainerRef, onImageLoad }: { src: stri
         observer.unobserve(currentRef);
       }
     };
-  }, [scrollContainerRef]);
+  }, [scrollContainerRef, areAllImagesLoaded]);
 
   return (
     <section
       ref={ref}
       className={`h-full inline-flex items-center justify-center flex-shrink-0 transition-all duration-700 ease-in-out ${
-        isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+        isVisible && areAllImagesLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
       }`}
     >
       <div className="relative w-auto h-[85vh] rounded-[20px] overflow-hidden shadow-lg">
@@ -62,7 +62,7 @@ const ProjectImage = ({ src, alt, scrollContainerRef, onImageLoad }: { src: stri
           sizes="100vw"
           style={{ height: '100%', width: 'auto' }}
           priority // Helps with layout calculation by loading the first images faster
-          onLoad={onImageLoad}
+          onLoad={() => onImageLoad(src)}
         />
       </div>
     </section>
@@ -82,32 +82,61 @@ export default function ProjectPage() {
   const [isTitleVisible, setIsTitleVisible] = useState(false);
   const [isInfoVisible, setIsInfoVisible] = useState(false);
   const [areImagesLoaded, setAreImagesLoaded] = useState(false);
-  const loadedImagesCount = useRef(0);
+  const loadedImagesSet = useRef<Set<string>>(new Set());
 
   const project = projectsData.find((p) => p.slug === slug);
 
-  const handleImageLoad = () => {
+  const handleImageLoad = (imageSrc: string) => {
     if (!project) return;
-    loadedImagesCount.current += 1;
-    if (loadedImagesCount.current === project.images.length) {
-      setAreImagesLoaded(true);
+    
+    // Track which images have loaded to avoid double-counting
+    if (loadedImagesSet.current.has(imageSrc)) return;
+    loadedImagesSet.current.add(imageSrc);
+    
+    // Check if all images are now loaded
+    if (loadedImagesSet.current.size === project.images.length) {
+      // Small delay to ensure all images are rendered in the DOM
+      setTimeout(() => {
+        setAreImagesLoaded(true);
+      }, 200);
     }
   };
 
+  // Reset and preload images when project changes
   useEffect(() => {
-    if (project && project.images.length === 0) {
-        setAreImagesLoaded(true);
+    if (!project) return;
+    
+    // Reset state when project changes
+    loadedImagesSet.current.clear();
+    setAreImagesLoaded(false);
+    
+    if (project.images.length === 0) {
+      setAreImagesLoaded(true);
+      return;
     }
+
+    // Preload all images to ensure they start loading immediately
+    // This helps in production where network latency can cause delays
+    project.images.forEach((src) => {
+      const img = new window.Image();
+      const fullSrc = src.startsWith('/') ? `${window.location.origin}${src}` : src;
+      img.src = fullSrc;
+      // Note: We don't count preload here, we wait for Next.js Image onLoad
+      // This just ensures images start loading early
+    });
   }, [project]);
 
   useEffect(() => {
+    // Only start title/info animations after images are loaded
+    if (!areImagesLoaded) return;
+    
     const titleTimer = setTimeout(() => setIsTitleVisible(true), 200);
     const infoTimer = setTimeout(() => setIsInfoVisible(true), 400);
     return () => {
       clearTimeout(titleTimer);
       clearTimeout(infoTimer);
     };
-  }, []);
+  }, [areImagesLoaded]);
 
   useEffect(() => {
     const element = scrollRef.current;
@@ -235,6 +264,7 @@ export default function ProjectPage() {
             alt={`${project.title} image ${index + 1}`}
             scrollContainerRef={scrollRef}
             onImageLoad={handleImageLoad}
+            areAllImagesLoaded={areImagesLoaded}
           />
         ))}
         

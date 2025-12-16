@@ -125,7 +125,7 @@ export default function MarbleScene({ hoveredIndex, hoverColor }: { hoveredIndex
         >
             {/* OPTIMIZATION: This component will monitor performance and adjust DPR */}
             <PerformanceMonitor 
-              onIncline={() => setDpr(2)} 
+              onIncline={() => setDpr(1.5)} 
               onDecline={() => setDpr(1)}
             />
 

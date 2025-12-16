@@ -30,6 +30,20 @@ export const projectsData: Project[] = [
     images: ['/images/metronomics-1.png', '/images/metronomics-2.png', '/images/metronomics-3.png', '/images/metronomics-4.png'],
   },
   {
+    slug: 'rearview',
+    title: 'Rearview Mobile Application',
+    description:
+      'Recognizing the need for a more intuitive approach to personal introspection, I conceptualized and developed Rearview, a dedicated mobile journaling platform. I led the entire product lifecycle, from initial wireframing to full iOS implementation, focusing on a minimalist interface that reduces the friction of daily documentation. My goal was to synthesize clean design principles with robust functional architecture, delivering a seamless user experience that encourages consistent reflection.',
+    details: {
+      agency: 'PERSONAL PROJECT',
+      job: 'PRODUCT DESIGN, IOS DEVELOPMENT',
+      position: 'FOUNDER / LEAD DEVELOPER',
+      stack: 'SWIFT, SWIFTUI, FIGMA',
+      year: '2025',
+    },
+    images: ['/images/rearview-1.png', '/images/rearview-2.png', '/images/rearview-3.png', '/images/rearview-4.png', '/images/rearview-5.png', '/images/rearview-6.png', '/images/rearview-7.png', '/images/rearview-8.png'],
+  },
+  {
     slug: 'qswap',
     title: 'QSwap Marketplace App',
     description:
