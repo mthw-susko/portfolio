@@ -211,12 +211,24 @@ export default function ProjectPage() {
       ref={scrollRef} 
       className={`h-screen w-full overflow-x-auto overflow-y-hidden whitespace-nowrap no-scrollbar transition-opacity duration-500 ${isExiting ? 'page-fade-out' : 'page-fade-in'} ${areImagesLoaded ? 'opacity-100' : 'opacity-0'}`}
     >
+      {/* Loading Indicator */}
+      {!areImagesLoaded && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--background)]">
+          <div className="flex flex-col items-center gap-6">
+            <div className="w-12 h-12 border-2 border-[var(--foreground)] border-t-transparent rounded-full animate-spin opacity-40"></div>
+            <p className="font-imperial text-xs uppercase tracking-[0.4em] text-[var(--foreground)] opacity-50">
+              Loading
+            </p>
+          </div>
+        </div>
+      )}
+
       <div className="inline-flex h-full items-center gap-12 px-5 md:px-16">
         {/* Fixed close button at the top right */}
         <Link
           href="/#works"
           onClick={handleClose}
-          className="fixed top-8 right-8 z-10 grid cursor-pointer place-items-center group"
+          className={`fixed top-8 right-8 z-10 grid cursor-pointer place-items-center group transition-opacity duration-500 ${areImagesLoaded ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
         >
           {/* Invisible text to reserve space for the widest state */}
           <span className="invisible col-start-1 row-start-1 font-imperial text-xl uppercase tracking-[0.4em]">
@@ -269,7 +281,7 @@ export default function ProjectPage() {
         ))}
         
         {/* Panel: Vertical Close Button at the end */}
-        <section className="h-full inline-flex items-center justify-center flex-shrink-0 px-8">
+        <section className={`h-full inline-flex items-center justify-center flex-shrink-0 px-8 transition-opacity duration-500 ${areImagesLoaded ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
             <Link
                 href="/#works"
                 onClick={handleClose}
