@@ -30,6 +30,20 @@ export const projectsData: Project[] = [
     images: ['/images/metronomics-1.png', '/images/metronomics-2.png', '/images/metronomics-3.png', '/images/metronomics-4.png'],
   },
   {
+    slug: 'playbackd',
+    title: 'Playbackd Music Rating App',
+    description:
+      'Driven by a passion for music discovery and community, I designed and developed Playbackd, a social platform for rating and reviewing albums. Inspired by the concept of cataloging media experiences, I built a feature-rich iOS application that lets users dive deep into album tracklists, share star ratings and written reviews, and build a curated music identity. The project involved designing an engaging discovery feed, detailed album pages with track-level ratings, and personalized user profiles that showcase listening taste and activity.',
+    details: {
+      agency: 'PERSONAL PROJECT',
+      job: 'PRODUCT DESIGN, IOS DEVELOPMENT',
+      position: 'FOUNDER / LEAD DEVELOPER',
+      stack: 'REACT NATIVE, AWS, DJANGO, FIGMA',
+      year: '2026',
+    },
+    images: ['/images/playbackd-1.jpg', '/images/playbackd-2.jpg', '/images/playbackd-3.jpg', '/images/playbackd-4.png', '/images/playbackd-5.jpg', '/images/playbackd-6.jpg', '/images/playbackd-7.jpg'],
+  },
+  {
     slug: 'rearview',
     title: 'Rearview Mobile Application',
     description:
@@ -83,7 +97,7 @@ export const projectsData: Project[] = [
       stack: 'FIGMA, REACT, TYPESCRIPT, CSS',
       year: '2024',
     },
-    images: ['/images/qweb-1.png', '/images/qweb-2.png', '/images/qweb-3.png' , '/images/qweb-4.png'],
+    images: ['/images/qweb-1.png', '/images/qweb-2.png', '/images/qweb-3.png', '/images/qweb-4.png'],
   },
   {
     slug: 'qgdc-redesign',
