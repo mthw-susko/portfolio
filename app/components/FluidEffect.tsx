@@ -8,6 +8,9 @@ import { Fluid } from "@whatisjery/react-fluid-distortion";
 export default function FluidEffect() {
   return (
     <Canvas
+      // The whole canvas is blurred 10px, so rendering at retina resolution is
+      // wasted GPU work — dpr 1 looks identical and halves the fluid sim cost.
+      dpr={1}
       style={{
         position: "fixed",
         top: 0,

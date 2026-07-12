@@ -17,7 +17,7 @@ const personalProjects = [
   { name: "PLAYBACKD", category: "IOS", href: "/projects/playbackd" },
   { name: "REARVIEW", category: "IOS", href: "/projects/rearview" },
   { name: "QSWAP", category: "IOS", href: "/projects/qswap" },
-  { name: "HOTTAKE", category: "IOS", href: "/projects/hottake " },
+  { name: "HOTTAKE", category: "IOS", href: "/projects/hottake" },
   { name: "MINTY PI", category: "HARDWARE", href: "/projects/mintypi" },
   { name: "RABBIT R1", category: "OS", href: "/projects/rabbit-r1" },
 ];
@@ -30,7 +30,7 @@ const getCategoryGroup = (category: string) => {
 
 export default function Home() {
   // --- All your existing state and refs ---
-  const projectColors = useMemo(() => ['#ff6b6b', '#f0e68c', '#87ceeb', '#98fb98', '#dda0dd', '#ffA500', '#ffc0cb'], []);
+  const projectColors = useMemo(() => ['#ff6b6b', '#f0e68c', '#87ceeb', '#98fb98', '#dda0dd', '#ffA500', '#ffc0cb', '#40e0d0', '#c792ea'], []);
   const [hoveredIndex, setHoveredIndex] = useState(-1);
   const socials = [{ name: "LINKEDIN", href: "https://www.linkedin.com/in/matthew-mb-susko/" }, { name: "MAIL", href: "mailto:matthew@susko.ca" }, { name: "GITHUB", href: "https://github.com/mthw-susko" }];
   const [fontSize, setFontSize] = useState(5);
@@ -117,8 +117,9 @@ export default function Home() {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 768) { setFontSize(2); } 
-      else if (window.innerWidth < 1024) { setFontSize(3); } 
+      if (window.innerWidth < 480) { setFontSize(1.4); }
+      else if (window.innerWidth < 768) { setFontSize(2); }
+      else if (window.innerWidth < 1024) { setFontSize(3); }
       else { setFontSize(4); }
     };
     handleResize();
@@ -132,12 +133,12 @@ export default function Home() {
         ref={main} 
         className={`flex flex-col items-center min-h-screen py-24 px-4 pointer-events-none transition-opacity duration-700 ease-in ${isLoaded && !isExiting ? 'opacity-100' : 'opacity-0'}`}
       >
-        <section className="text-center mt-36 min-w-screen]">
-          <div className="min-w-96">
+        <section className="text-center mt-36 w-full">
+          <div className="w-full">
             <ShaderText fontSize={fontSize} height={"50vh"} lineHeight={0.8}>
               {`Matthew\nSusko`}
             </ShaderText>
-            <p className="font-helvetica text-base uppercase lg:max-w-2/3 sm:min-w-1 mx-auto">
+            <p className="text-base uppercase max-w-2xl lg:max-w-3xl mx-auto px-4">
               A Canada-based computer scientist specializing in all things user
               experience, design, and interaction
             </p>

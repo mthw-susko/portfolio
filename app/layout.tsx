@@ -14,8 +14,18 @@ const imperial = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "MATTHEW SUSKO",
-  description: "Welcome to my portfolio",
+  title: {
+    default: "MATTHEW SUSKO",
+    template: "%s — MATTHEW SUSKO",
+  },
+  description:
+    "Portfolio of Matthew Susko, a Canada-based computer scientist specializing in user experience, design, and interaction.",
+  openGraph: {
+    title: "MATTHEW SUSKO",
+    description:
+      "Portfolio of Matthew Susko, a Canada-based computer scientist specializing in user experience, design, and interaction.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({

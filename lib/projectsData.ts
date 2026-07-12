@@ -55,7 +55,7 @@ export const projectsData: Project[] = [
       stack: 'SWIFT, SWIFTUI, FIGMA',
       year: '2025',
     },
-    images: ['/images/rearview-1.png', '/images/rearview-2.png', '/images/rearview-3.png', '/images/rearview-4.png', '/images/rearview-5.png', '/images/rearview-6.png', '/images/rearview-7.png', '/images/rearview-8.png'],
+    images: ['/images/rearview-1.jpg', '/images/rearview-2.jpg', '/images/rearview-3.png', '/images/rearview-4.png', '/images/rearview-5.png', '/images/rearview-6.png', '/images/rearview-7.jpg', '/images/rearview-8.jpg'],
   },
   {
     slug: 'qswap',
@@ -69,7 +69,7 @@ export const projectsData: Project[] = [
       stack: 'REACT NATIVE, FIREBASE, TYPESCRIPT, NODE.JS',
       year: '2025',
     },
-    images: ['/images/qswap-1.png', '/images/qswap-2.png', '/images/qswap-3.PNG', '/images/qswap-4.PNG', '/images/qswap-5.PNG', '/images/qswap-6.PNG', '/images/qswap-7.PNG'],
+    images: ['/images/qswap-1.png', '/images/qswap-2.jpg', '/images/qswap-3.jpg', '/images/qswap-4.png', '/images/qswap-5.png', '/images/qswap-6.png', '/images/qswap-7.jpg'],
   },
   {
     slug: 'hottake',
@@ -83,7 +83,7 @@ export const projectsData: Project[] = [
       stack: 'SWIFTUI, FIREBASE, FIGMA',
       year: '2025',
     },
-    images: ['/images/hottake-2.png', '/images/hottake-3.png', '/images/hottake-4.png', '/images/hottake-5.png', '/images/hottake-6.png', '/images/hottake-1.png'],
+    images: ['/images/hottake-2.png', '/images/hottake-3.png', '/images/hottake-4.png', '/images/hottake-5.png', '/images/hottake-6.jpg', '/images/hottake-1.png'],
   },
   {
     slug: 'qweb-redesign',
@@ -97,7 +97,7 @@ export const projectsData: Project[] = [
       stack: 'FIGMA, REACT, TYPESCRIPT, CSS',
       year: '2024',
     },
-    images: ['/images/qweb-1.png', '/images/qweb-2.png', '/images/qweb-3.png', '/images/qweb-4.png'],
+    images: ['/images/qweb-1.png', '/images/qweb-2.jpg', '/images/qweb-3.png', '/images/qweb-4.png'],
   },
   {
     slug: 'qgdc-redesign',
@@ -111,7 +111,7 @@ export const projectsData: Project[] = [
       stack: 'FIGMA, WEBFLOW, JAVASCRIPT',
       year: '2023',
     },
-    images: ['/images/qgdc-1.png', '/images/qgdc-2.png', '/images/qgdc-3.png', '/images/qgdc-4.png', '/images/qgdc-5.png', '/images/qgdc-6.png', '/images/qgdc-7.png', '/images/qgdc-8.png'],
+    images: ['/images/qgdc-1.png', '/images/qgdc-2.jpg', '/images/qgdc-3.png', '/images/qgdc-4.jpg', '/images/qgdc-5.png', '/images/qgdc-6.jpg', '/images/qgdc-7.png', '/images/qgdc-8.jpg'],
   },
   {
     slug: 'mintypi',
@@ -125,22 +125,24 @@ export const projectsData: Project[] = [
       stack: 'RASPBERRY PI, RETROPIE, LINUX',
       year: '2020',
     },
-    images: ['/images/mintypi-1.png', '/images/mintypi-2.png', '/images/mintypi-4.png', '/images/mintypi-5.png'],
+    images: ['/images/mintypi-1.jpg', '/images/mintypi-2.jpg', '/images/mintypi-4.jpg', '/images/mintypi-5.jpg'],
   },
-  {
-    slug: 'caldera-keyboard',
-    title: 'Caldera Custom Split Keyboard',
-    description:
-      'I executed the end-to-end creation of the Caldera, a fully custom, split ergonomic keyboard with Bluetooth connectivity. The project involved 3D printing the enclosure, hand-soldering every low-profile switch and electronic component, and flashing the board with open-source firmware for full customization. This build demonstrates a comprehensive ability to manage a complex hardware project from design and assembly to final firmware implementation.',
-    details: {
-      agency: 'PERSONAL PROJECT',
-      job: 'HARDWARE DESIGN, FIRMWARE DEVELOPMENT',
-      position: 'PERSONAL',
-      stack: '3D PRINTING, QMK FIRMWARE, C, SOLDERING',
-      year: '2024',
-    },
-    images: ['/images/caldera-1.png', '/images/caldera-2.png', '/images/caldera-3.png'],
-  },
+  // Disabled until its images exist in public/images and it gets a homepage
+  // link — with no caldera-*.png files the page renders an empty gallery.
+  // {
+  //   slug: 'caldera-keyboard',
+  //   title: 'Caldera Custom Split Keyboard',
+  //   description:
+  //     'I executed the end-to-end creation of the Caldera, a fully custom, split ergonomic keyboard with Bluetooth connectivity. The project involved 3D printing the enclosure, hand-soldering every low-profile switch and electronic component, and flashing the board with open-source firmware for full customization. This build demonstrates a comprehensive ability to manage a complex hardware project from design and assembly to final firmware implementation.',
+  //   details: {
+  //     agency: 'PERSONAL PROJECT',
+  //     job: 'HARDWARE DESIGN, FIRMWARE DEVELOPMENT',
+  //     position: 'PERSONAL',
+  //     stack: '3D PRINTING, QMK FIRMWARE, C, SOLDERING',
+  //     year: '2024',
+  //   },
+  //   images: ['/images/caldera-1.png', '/images/caldera-2.png', '/images/caldera-3.png'],
+  // },
   {
     slug: 'rabbit-r1',
     title: 'Rabbit R1 Android Modification',
