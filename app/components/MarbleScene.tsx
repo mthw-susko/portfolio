@@ -74,7 +74,9 @@ function Cubes({ hoveredIndex, hoverColor }: { hoveredIndex: number; hoverColor:
   const groupRef = useRef<THREE.Group>(null!);
   const rotationSpeed = 0.2;
 
-  const colors = useMemo(() => ['#ff6b6b', '#f0e68c', '#87ceeb', '#98fb98', '#c792ea'], []);
+  // Keep these pastel: MeshTransmissionMaterial tints transmitted light, so a
+  // saturated color (low green/blue) renders dark and loses its aberration fringes.
+  const colors = useMemo(() => ['#ffb3b3', '#f0e68c', '#87ceeb', '#98fb98', '#c792ea'], []);
 
   const positions = useMemo(() => {
     const radius = 2;

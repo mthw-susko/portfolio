@@ -30,7 +30,8 @@ const getCategoryGroup = (category: string) => {
 
 export default function Home() {
   // --- All your existing state and refs ---
-  const projectColors = useMemo(() => ['#ff6b6b', '#f0e68c', '#87ceeb', '#98fb98', '#dda0dd', '#ffA500', '#ffc0cb', '#40e0d0', '#c792ea'], []);
+  // Keep these pastel — saturated colors render dark on the glass cubes (see MarbleScene).
+  const projectColors = useMemo(() => ['#ffb3b3', '#f0e68c', '#87ceeb', '#98fb98', '#dda0dd', '#ffc966', '#ffc0cb', '#40e0d0', '#c792ea'], []);
   const [hoveredIndex, setHoveredIndex] = useState(-1);
   const socials = [{ name: "LINKEDIN", href: "https://www.linkedin.com/in/matthew-mb-susko/" }, { name: "MAIL", href: "mailto:matthew@susko.ca" }, { name: "GITHUB", href: "https://github.com/mthw-susko" }];
   const [fontSize, setFontSize] = useState(5);
