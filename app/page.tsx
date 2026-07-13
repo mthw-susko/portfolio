@@ -7,6 +7,7 @@ import React from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useRouter } from "next/navigation";
+import { setFluidHoverColor } from "@/lib/hoverColorStore";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -44,7 +45,14 @@ export default function Home() {
   // NEW: State to control when the page fades in and out
   const [isLoaded, setIsLoaded] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
+  // Stop the marble canvas rendering once it has faded out past the about section.
+  const [marblePaused, setMarblePaused] = useState(false);
   const router = useRouter();
+
+  const handleProjectHover = (index: number) => {
+    setHoveredIndex(index);
+    setFluidHoverColor(index === -1 ? null : projectColors[index]);
+  };
 
   // NEW: Effect to trigger the fade-in after the component has mounted
   useEffect(() => {
@@ -107,6 +115,8 @@ export default function Home() {
               start: "top bottom",
               end: "top top",
               scrub: 2,
+              onLeave: () => setMarblePaused(true),
+              onEnterBack: () => setMarblePaused(false),
           },
         });
         tl2.to(marbleSceneWrapper.current, { x: 0, y: 0, scale: 1, autoAlpha: 0, ease: "power1.inOut" });
@@ -135,6 +145,7 @@ export default function Home() {
         className={`flex flex-col items-center min-h-screen py-24 px-4 pointer-events-none transition-opacity duration-700 ease-in ${isLoaded && !isExiting ? 'opacity-100' : 'opacity-0'}`}
       >
         <section className="text-center mt-36 w-full">
+          <h1 className="sr-only">Matthew Susko</h1>
           <div className="w-full">
             <ShaderText fontSize={fontSize} height={"50vh"} lineHeight={0.8}>
               {`Matthew\nSusko`}
@@ -150,11 +161,13 @@ export default function Home() {
           <MarbleScene
             hoveredIndex={hoveredIndex}
             hoverColor={hoveredIndex !== -1 ? projectColors[hoveredIndex] : null}
+            paused={marblePaused}
           />
         </div>
 
         <section ref={worksSectionRef} id="works" className="lg:pt-[150px] w-full flex justify-center items-center gap-16 px-4 sm:px-8 md:px-16 lg:px-24 xl:px-36 relative z-10 bg-transparent">
           <div className="md:w-1/2 lg:w-5/6">
+            <h2 className="sr-only">Selected Works</h2>
             <div className="max-w-64 w-full">
               <ShaderText fontSize={1} height={"15vh"} lineHeight={1} textAlign="left">
                 {`SELECTED\nWORKS`}
@@ -172,8 +185,8 @@ export default function Home() {
                       <a
                         href={project.href}
                         onClick={handleLinkClick(project.href)}
-                        onMouseEnter={() => setHoveredIndex(index)}
-                        onMouseLeave={() => setHoveredIndex(-1)}
+                        onMouseEnter={() => handleProjectHover(index)}
+                        onMouseLeave={() => handleProjectHover(-1)}
                         className={`flex w-fit text-lg uppercase hover:opacity-75 transition-opacity pointer-events-auto ${addMargin ? 'mt-4' : ''}`}>
                         <span>{project.name}&nbsp;</span>
                         <span className="text-gray-400">{"// " + project.category}</span>
@@ -188,7 +201,8 @@ export default function Home() {
           </div>
         </section>
 
-        <section ref={aboutSectionRef} className="lg:mt-[800px] w-full px-4 sm:px-8 md:px-16 lg:px-24 xl:px-36 text-center">
+        <section ref={aboutSectionRef} className="mt-24 lg:mt-[250px] w-full px-4 sm:px-8 md:px-16 lg:px-24 xl:px-36 text-center">
+            <h2 className="sr-only">More about me</h2>
             <div className="w-full">
               <ShaderText fontSize={(fontSize-1.2)} height={"40vh"} lineHeight={1} textAlign="left">
                 {"MORE ABOUT ME"}

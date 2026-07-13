@@ -6,7 +6,7 @@ import { useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { MeshTransmissionMaterial, Environment, PerformanceMonitor } from '@react-three/drei';
 
-function GlassCube({ color, index, hoveredIndex, numCubes, ...props }: { color: string; index: number; hoveredIndex: number; numCubes: number; [key: string]: unknown }) {
+function GlassCube({ color, hoveredIndex, ...props }: { color: string; hoveredIndex: number; [key: string]: unknown }) {
   const materialProps = {
     thickness: 0.9,
     roughness: 0.2,
@@ -14,7 +14,11 @@ function GlassCube({ color, index, hoveredIndex, numCubes, ...props }: { color: 
     ior: 1.2,
     chromaticAberration: 1,
     backside: true,
-    samples: 8,
+    // Transmission renders the scene to a buffer per sample per frame — this
+    // is the most expensive thing on the page. 4 samples at 512px is visually
+    // indistinguishable from 8 at full-res for blurry rotating glass.
+    samples: 4,
+    resolution: 512,
     temporalDistortion: 0.4,
   };
 
@@ -37,24 +41,27 @@ function GlassCube({ color, index, hoveredIndex, numCubes, ...props }: { color: 
     meshRef.current.rotation.x += delta * randomSpeeds.current.x;
     meshRef.current.rotation.y += delta * randomSpeeds.current.y;
 
-    const isHovered = hoveredIndex !== -1 && index === hoveredIndex % numCubes;
+    // All cubes respond together: with 9 projects sharing 5 cubes, a
+    // single-cube mapping read as random. The whole scene taking on the
+    // project's color and energy is a clearer hover signal.
+    const isHovered = hoveredIndex !== -1;
 
     // Animate scale
-    const targetScale = isHovered ? 1.3 : 1;
+    const targetScale = isHovered ? 1.15 : 1;
     // OPTIMIZATION: Update the existing vector instead of creating a new one.
     targetScaleVec.set(targetScale, targetScale, targetScale);
     meshRef.current.scale.lerp(targetScaleVec, 0.1);
 
     // Animate light intensity
     if (lightRef.current) {
-      const targetIntensity = isHovered ? 5.0 : 0.0;
+      const targetIntensity = isHovered ? 2.5 : 0.0;
       lightRef.current.intensity = THREE.MathUtils.lerp(lightRef.current.intensity, targetIntensity, 0.1);
     }
-    
-    // Spin the individual cube on hover on two axes
+
+    // Add extra tumble while a project is hovered
     if (isHovered) {
-      meshRef.current.rotation.y += delta * 2;
-      meshRef.current.rotation.x += delta * 2;
+      meshRef.current.rotation.y += delta * 1.5;
+      meshRef.current.rotation.x += delta * 1.5;
     }
   });
 
@@ -103,9 +110,7 @@ function Cubes({ hoveredIndex, hoverColor }: { hoveredIndex: number; hoverColor:
       {positions.map((pos, i) => (
         <GlassCube
             key={i}
-            index={i}
             hoveredIndex={hoveredIndex}
-            numCubes={positions.length}
             color={hoverColor || colors[i]}
             position={pos}
         />
@@ -114,16 +119,19 @@ function Cubes({ hoveredIndex, hoverColor }: { hoveredIndex: number; hoverColor:
   );
 }
 
-export default function MarbleScene({ hoveredIndex, hoverColor }: { hoveredIndex: number; hoverColor: string | null; }) {
+export default function MarbleScene({ hoveredIndex, hoverColor, paused = false }: { hoveredIndex: number; hoverColor: string | null; paused?: boolean; }) {
   // OPTIMIZATION: State to control Device Pixel Ratio for performance.
   const [dpr, setDpr] = useState(1.5);
 
   return (
     <div style={{ width: '100%', height: '100%', pointerEvents: 'auto' }}>
-        <Canvas 
+        <Canvas
             gl={{ antialias: false, alpha: true }} // Disabling antialias can help, monitor will re-enable if performance allows
             camera={{ position: [0, 0, 15], fov: 25 }}
             dpr={dpr} // Control DPR based on performance
+            // Once GSAP fades the scene out past the about section it's
+            // invisible but would keep rendering — stop the loop instead.
+            frameloop={paused ? 'demand' : 'always'}
         >
             {/* OPTIMIZATION: This component will monitor performance and adjust DPR */}
             <PerformanceMonitor 

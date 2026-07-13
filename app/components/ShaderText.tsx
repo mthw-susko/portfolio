@@ -16,6 +16,7 @@ import {
   useFBO,
   OrthographicCamera,
 } from "@react-three/drei";
+import InvalidateOnActivity from "./InvalidateOnActivity";
 
 // Define the shader material with a new uniform for aberration strength
 const SmearMaterial = shaderMaterial(
@@ -87,7 +88,7 @@ function Scene({
   const textScene = useMemo(() => new THREE.Scene(), []);
   const fbo = useFBO();
   const fontUrl = "/fonts/imperial-black.ttf";
-  const { viewport } = useThree();
+  const { viewport, invalidate } = useThree();
 
   useFrame((state) => {
     if (materialRef.current) {
@@ -121,6 +122,9 @@ function Scene({
           color="white"
           anchorX="center"
           anchorY="middle"
+          // With frameloop="demand", make sure a frame renders once the font
+          // has loaded even if the pointer never moves (e.g. on touch devices).
+          onSync={() => invalidate()}
         >
           {children}
         </Text>,
@@ -153,8 +157,13 @@ export default function ShaderText({
   textAlign = "center",
 }: ShaderTextProps) {
   return (
-    <div style={{ height }} className="w-full">
-      <Canvas>
+    // aria-hidden: the canvas text is decorative — pages render a visually
+    // hidden heading with the same content for screen readers and SEO.
+    <div style={{ height }} className="w-full" aria-hidden="true">
+      {/* The smear effect is mouse-driven; once the pointer settles the text
+          is static, so stop rendering instead of redrawing 60fps forever. */}
+      <Canvas frameloop="demand">
+        <InvalidateOnActivity timeout={4000} />
         <OrthographicCamera makeDefault position={[0, 0, 100]} zoom={50} />
         <Scene fontSize={fontSize} lineHeight={lineHeight} textAlign={textAlign}>
           {children}
