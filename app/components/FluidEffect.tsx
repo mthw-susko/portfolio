@@ -1,23 +1,11 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
 import { Canvas } from "@react-three/fiber";
 import { EffectComposer } from "@react-three/postprocessing";
 import { Fluid } from "@whatisjery/react-fluid-distortion";
 import InvalidateOnActivity from "./InvalidateOnActivity";
-import {
-  getFluidHoverColor,
-  subscribeFluidHoverColor,
-} from "@/lib/hoverColorStore";
 
 export default function FluidEffect() {
-  // Tint the fluid with the hovered project's color; rainbow otherwise.
-  const hoverColor = useSyncExternalStore(
-    subscribeFluidHoverColor,
-    getFluidHoverColor,
-    () => null
-  );
-
   return (
     <Canvas
       // The whole canvas is blurred 10px, so rendering at retina resolution is
@@ -49,11 +37,11 @@ export default function FluidEffect() {
             densityDissipation={0.98}
             velocityDissipation={0.95}
             intensity={0.3}
-            rainbow={hoverColor === null}
+            rainbow={true}
             blend={0}
             showBackground={true}
             backgroundColor='#000000'
-            fluidColor={hoverColor ?? '#cfc0a8'}
+            fluidColor='#cfc0a8'
         />
       </EffectComposer>
     </Canvas>

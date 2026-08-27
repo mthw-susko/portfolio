@@ -7,7 +7,6 @@ import React from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useRouter } from "next/navigation";
-import { setFluidHoverColor } from "@/lib/hoverColorStore";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -48,11 +47,6 @@ export default function Home() {
   // Stop the marble canvas rendering once it has faded out past the about section.
   const [marblePaused, setMarblePaused] = useState(false);
   const router = useRouter();
-
-  const handleProjectHover = (index: number) => {
-    setHoveredIndex(index);
-    setFluidHoverColor(index === -1 ? null : projectColors[index]);
-  };
 
   // NEW: Effect to trigger the fade-in after the component has mounted
   useEffect(() => {
@@ -185,8 +179,8 @@ export default function Home() {
                       <a
                         href={project.href}
                         onClick={handleLinkClick(project.href)}
-                        onMouseEnter={() => handleProjectHover(index)}
-                        onMouseLeave={() => handleProjectHover(-1)}
+                        onMouseEnter={() => setHoveredIndex(index)}
+                        onMouseLeave={() => setHoveredIndex(-1)}
                         className={`flex w-fit text-lg uppercase hover:opacity-75 transition-opacity pointer-events-auto ${addMargin ? 'mt-4' : ''}`}>
                         <span>{project.name}&nbsp;</span>
                         <span className="text-gray-400">{"// " + project.category}</span>
@@ -201,7 +195,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section ref={aboutSectionRef} className="mt-24 lg:mt-[250px] w-full px-4 sm:px-8 md:px-16 lg:px-24 xl:px-36 text-center">
+        <section ref={aboutSectionRef} className="lg:mt-[800px] w-full px-4 sm:px-8 md:px-16 lg:px-24 xl:px-36 text-center">
             <h2 className="sr-only">More about me</h2>
             <div className="w-full">
               <ShaderText fontSize={(fontSize-1.2)} height={"40vh"} lineHeight={1} textAlign="left">

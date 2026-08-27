@@ -6,7 +6,7 @@ import { useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { MeshTransmissionMaterial, Environment, PerformanceMonitor } from '@react-three/drei';
 
-function GlassCube({ color, hoveredIndex, ...props }: { color: string; hoveredIndex: number; [key: string]: unknown }) {
+function GlassCube({ color, index, hoveredIndex, numCubes, ...props }: { color: string; index: number; hoveredIndex: number; numCubes: number; [key: string]: unknown }) {
   const materialProps = {
     thickness: 0.9,
     roughness: 0.2,
@@ -41,27 +41,24 @@ function GlassCube({ color, hoveredIndex, ...props }: { color: string; hoveredIn
     meshRef.current.rotation.x += delta * randomSpeeds.current.x;
     meshRef.current.rotation.y += delta * randomSpeeds.current.y;
 
-    // All cubes respond together: with 9 projects sharing 5 cubes, a
-    // single-cube mapping read as random. The whole scene taking on the
-    // project's color and energy is a clearer hover signal.
-    const isHovered = hoveredIndex !== -1;
+    const isHovered = hoveredIndex !== -1 && index === hoveredIndex % numCubes;
 
     // Animate scale
-    const targetScale = isHovered ? 1.15 : 1;
+    const targetScale = isHovered ? 1.3 : 1;
     // OPTIMIZATION: Update the existing vector instead of creating a new one.
     targetScaleVec.set(targetScale, targetScale, targetScale);
     meshRef.current.scale.lerp(targetScaleVec, 0.1);
 
     // Animate light intensity
     if (lightRef.current) {
-      const targetIntensity = isHovered ? 2.5 : 0.0;
+      const targetIntensity = isHovered ? 5.0 : 0.0;
       lightRef.current.intensity = THREE.MathUtils.lerp(lightRef.current.intensity, targetIntensity, 0.1);
     }
 
-    // Add extra tumble while a project is hovered
+    // Spin the individual cube on hover on two axes
     if (isHovered) {
-      meshRef.current.rotation.y += delta * 1.5;
-      meshRef.current.rotation.x += delta * 1.5;
+      meshRef.current.rotation.y += delta * 2;
+      meshRef.current.rotation.x += delta * 2;
     }
   });
 
@@ -110,7 +107,9 @@ function Cubes({ hoveredIndex, hoverColor }: { hoveredIndex: number; hoverColor:
       {positions.map((pos, i) => (
         <GlassCube
             key={i}
+            index={i}
             hoveredIndex={hoveredIndex}
+            numCubes={positions.length}
             color={hoverColor || colors[i]}
             position={pos}
         />
