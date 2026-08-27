@@ -16,7 +16,7 @@ import {
   useFBO,
   OrthographicCamera,
 } from "@react-three/drei";
-import InvalidateOnActivity from "./InvalidateOnActivity";
+import { useDemandFrames } from "./useDemandFrames";
 
 // Define the shader material with a new uniform for aberration strength
 const SmearMaterial = shaderMaterial(
@@ -156,14 +156,15 @@ export default function ShaderText({
   lineHeight = 1,
   textAlign = "center",
 }: ShaderTextProps) {
+  const onCreated = useDemandFrames(240);
+
   return (
     // aria-hidden: the canvas text is decorative — pages render a visually
     // hidden heading with the same content for screen readers and SEO.
     <div style={{ height }} className="w-full" aria-hidden="true">
       {/* The smear effect is mouse-driven; once the pointer settles the text
           is static, so stop rendering instead of redrawing 60fps forever. */}
-      <Canvas frameloop="demand">
-        <InvalidateOnActivity timeout={4000} />
+      <Canvas frameloop="demand" onCreated={onCreated}>
         <OrthographicCamera makeDefault position={[0, 0, 100]} zoom={50} />
         <Scene fontSize={fontSize} lineHeight={lineHeight} textAlign={textAlign}>
           {children}

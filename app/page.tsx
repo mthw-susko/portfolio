@@ -203,7 +203,7 @@ export default function Home() {
               </ShaderText>
             </div>
           <p className=" text-base uppercase leading-relaxed text-left md:max-w-full lg:max-w-3/4 mx-auto mt-[-60px]">
-            I&apos;m a final-year Computer Science student at Queen&apos;s University, specializing in Software Design. My passion lies at the intersection of creativity and utility—specifically in UI/UX design, where I can apply my <strong>lifelong love of drawing</strong> to build software that <strong>genuinely improves people&apos;s lives</strong>.
+            I&apos;m pursuing a <strong>Master&apos;s in Human-Computer Interaction at Carnegie Mellon University</strong>, after earning my Computer Science degree at Queen&apos;s University with a specialization in Software Design. My passion lies at the intersection of creativity and utility—specifically in UI/UX design, where I can apply my <strong>lifelong love of drawing</strong> to build software that <strong>genuinely improves people&apos;s lives</strong>.
             <br/><br/>
             Originally from Whistler, BC, my background is also shaped by a decade as a competitive national gymnast. The <strong>discipline, precision, and iterative process</strong> required to perfect a routine are the same principles I now bring to designing <strong>intuitive and elegant user experiences</strong>. I thrive on <strong>creating, experimenting, and ultimately, empowering users</strong>.
             <br/><br/>

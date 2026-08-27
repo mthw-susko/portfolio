@@ -3,17 +3,20 @@
 import { Canvas } from "@react-three/fiber";
 import { EffectComposer } from "@react-three/postprocessing";
 import { Fluid } from "@whatisjery/react-fluid-distortion";
-import InvalidateOnActivity from "./InvalidateOnActivity";
+import { useDemandFrames } from "./useDemandFrames";
 
 export default function FluidEffect() {
+  const onCreated = useDemandFrames(360);
+
   return (
     <Canvas
       // The whole canvas is blurred 10px, so rendering at retina resolution is
       // wasted GPU work — dpr 1 looks identical and halves the fluid sim cost.
       dpr={1}
-      // Only render while the pointer is active (see InvalidateOnActivity);
-      // the fluid is mouse-driven, so idle frames are identical anyway.
+      // Only render while the pointer is active (see useDemandFrames); the
+      // fluid is mouse-driven, so idle frames are identical anyway.
       frameloop="demand"
+      onCreated={onCreated}
       style={{
         position: "fixed",
         top: 0,
@@ -25,7 +28,6 @@ export default function FluidEffect() {
         filter: "blur(10px)", // Apply a slight blur to the entire canvas
       }}
     >
-      <InvalidateOnActivity timeout={6000} />
       <EffectComposer>
         <Fluid
             radius={0.1}
