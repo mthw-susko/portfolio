@@ -1,15 +1,11 @@
 @import "tailwindcss";
 
+/* The site is designed dark-only: the fluid background canvas is always black,
+   so light-mode palette values would render unreadable text. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  color-scheme: dark;
 }
 
 body {

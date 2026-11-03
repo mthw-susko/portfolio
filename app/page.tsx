@@ -17,7 +17,7 @@ const personalProjects = [
   { name: "PLAYBACKD", category: "IOS", href: "/projects/playbackd" },
   { name: "REARVIEW", category: "IOS", href: "/projects/rearview" },
   { name: "QSWAP", category: "IOS", href: "/projects/qswap" },
-  { name: "HOTTAKE", category: "IOS", href: "/projects/hottake " },
+  { name: "HOTTAKE", category: "IOS", href: "/projects/hottake" },
   { name: "MINTY PI", category: "HARDWARE", href: "/projects/mintypi" },
   { name: "RABBIT R1", category: "OS", href: "/projects/rabbit-r1" },
 ];
@@ -30,7 +30,8 @@ const getCategoryGroup = (category: string) => {
 
 export default function Home() {
   // --- All your existing state and refs ---
-  const projectColors = useMemo(() => ['#ff6b6b', '#f0e68c', '#87ceeb', '#98fb98', '#dda0dd', '#ffA500', '#ffc0cb'], []);
+  // Keep these pastel — saturated colors render dark on the glass cubes (see MarbleScene).
+  const projectColors = useMemo(() => ['#ffb3b3', '#f0e68c', '#87ceeb', '#98fb98', '#dda0dd', '#ffc966', '#ffc0cb', '#40e0d0', '#c792ea'], []);
   const [hoveredIndex, setHoveredIndex] = useState(-1);
   const socials = [{ name: "LINKEDIN", href: "https://www.linkedin.com/in/matthew-mb-susko/" }, { name: "MAIL", href: "mailto:matthew@susko.ca" }, { name: "GITHUB", href: "https://github.com/mthw-susko" }];
   const [fontSize, setFontSize] = useState(5);
@@ -43,6 +44,8 @@ export default function Home() {
   // NEW: State to control when the page fades in and out
   const [isLoaded, setIsLoaded] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
+  // Stop the marble canvas rendering once it has faded out past the about section.
+  const [marblePaused, setMarblePaused] = useState(false);
   const router = useRouter();
 
   // NEW: Effect to trigger the fade-in after the component has mounted
@@ -106,6 +109,8 @@ export default function Home() {
               start: "top bottom",
               end: "top top",
               scrub: 2,
+              onLeave: () => setMarblePaused(true),
+              onEnterBack: () => setMarblePaused(false),
           },
         });
         tl2.to(marbleSceneWrapper.current, { x: 0, y: 0, scale: 1, autoAlpha: 0, ease: "power1.inOut" });
@@ -117,8 +122,9 @@ export default function Home() {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 768) { setFontSize(2); } 
-      else if (window.innerWidth < 1024) { setFontSize(3); } 
+      if (window.innerWidth < 480) { setFontSize(1.4); }
+      else if (window.innerWidth < 768) { setFontSize(2); }
+      else if (window.innerWidth < 1024) { setFontSize(3); }
       else { setFontSize(4); }
     };
     handleResize();
@@ -132,12 +138,13 @@ export default function Home() {
         ref={main} 
         className={`flex flex-col items-center min-h-screen py-24 px-4 pointer-events-none transition-opacity duration-700 ease-in ${isLoaded && !isExiting ? 'opacity-100' : 'opacity-0'}`}
       >
-        <section className="text-center mt-36 min-w-screen]">
-          <div className="min-w-96">
+        <section className="text-center mt-36 w-full">
+          <h1 className="sr-only">Matthew Susko</h1>
+          <div className="w-full">
             <ShaderText fontSize={fontSize} height={"50vh"} lineHeight={0.8}>
               {`Matthew\nSusko`}
             </ShaderText>
-            <p className="font-helvetica text-base uppercase lg:max-w-2/3 sm:min-w-1 mx-auto">
+            <p className="text-base uppercase max-w-2xl lg:max-w-3xl mx-auto px-4">
               A Canada-based computer scientist specializing in all things user
               experience, design, and interaction
             </p>
@@ -148,11 +155,13 @@ export default function Home() {
           <MarbleScene
             hoveredIndex={hoveredIndex}
             hoverColor={hoveredIndex !== -1 ? projectColors[hoveredIndex] : null}
+            paused={marblePaused}
           />
         </div>
 
         <section ref={worksSectionRef} id="works" className="lg:pt-[150px] w-full flex justify-center items-center gap-16 px-4 sm:px-8 md:px-16 lg:px-24 xl:px-36 relative z-10 bg-transparent">
           <div className="md:w-1/2 lg:w-5/6">
+            <h2 className="sr-only">Selected Works</h2>
             <div className="max-w-64 w-full">
               <ShaderText fontSize={1} height={"15vh"} lineHeight={1} textAlign="left">
                 {`SELECTED\nWORKS`}
@@ -187,13 +196,14 @@ export default function Home() {
         </section>
 
         <section ref={aboutSectionRef} className="lg:mt-[800px] w-full px-4 sm:px-8 md:px-16 lg:px-24 xl:px-36 text-center">
+            <h2 className="sr-only">More about me</h2>
             <div className="w-full">
               <ShaderText fontSize={(fontSize-1.2)} height={"40vh"} lineHeight={1} textAlign="left">
                 {"MORE ABOUT ME"}
               </ShaderText>
             </div>
           <p className=" text-base uppercase leading-relaxed text-left md:max-w-full lg:max-w-3/4 mx-auto mt-[-60px]">
-            I&apos;m a final-year Computer Science student at Queen&apos;s University, specializing in Software Design. My passion lies at the intersection of creativity and utility—specifically in UI/UX design, where I can apply my <strong>lifelong love of drawing</strong> to build software that <strong>genuinely improves people&apos;s lives</strong>.
+            I&apos;m pursuing a <strong>Master&apos;s in Human-Computer Interaction at Carnegie Mellon University</strong>, after earning my Computer Science degree at Queen&apos;s University with a specialization in Software Design. My passion lies at the intersection of creativity and utility—specifically in UI/UX design, where I can apply my <strong>lifelong love of drawing</strong> to build software that <strong>genuinely improves people&apos;s lives</strong>.
             <br/><br/>
             Originally from Whistler, BC, my background is also shaped by a decade as a competitive national gymnast. The <strong>discipline, precision, and iterative process</strong> required to perfect a routine are the same principles I now bring to designing <strong>intuitive and elegant user experiences</strong>. I thrive on <strong>creating, experimenting, and ultimately, empowering users</strong>.
             <br/><br/>

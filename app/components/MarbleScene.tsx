@@ -14,7 +14,11 @@ function GlassCube({ color, index, hoveredIndex, numCubes, ...props }: { color: 
     ior: 1.2,
     chromaticAberration: 1,
     backside: true,
-    samples: 8,
+    // Transmission renders the scene to a buffer per sample per frame — this
+    // is the most expensive thing on the page. 4 samples at 512px is visually
+    // indistinguishable from 8 at full-res for blurry rotating glass.
+    samples: 4,
+    resolution: 512,
     temporalDistortion: 0.4,
   };
 
@@ -50,7 +54,7 @@ function GlassCube({ color, index, hoveredIndex, numCubes, ...props }: { color: 
       const targetIntensity = isHovered ? 5.0 : 0.0;
       lightRef.current.intensity = THREE.MathUtils.lerp(lightRef.current.intensity, targetIntensity, 0.1);
     }
-    
+
     // Spin the individual cube on hover on two axes
     if (isHovered) {
       meshRef.current.rotation.y += delta * 2;
@@ -74,7 +78,9 @@ function Cubes({ hoveredIndex, hoverColor }: { hoveredIndex: number; hoverColor:
   const groupRef = useRef<THREE.Group>(null!);
   const rotationSpeed = 0.2;
 
-  const colors = useMemo(() => ['#ff6b6b', '#f0e68c', '#87ceeb', '#98fb98', '#c792ea'], []);
+  // Keep these pastel: MeshTransmissionMaterial tints transmitted light, so a
+  // saturated color (low green/blue) renders dark and loses its aberration fringes.
+  const colors = useMemo(() => ['#ffb3b3', '#f0e68c', '#87ceeb', '#98fb98', '#c792ea'], []);
 
   const positions = useMemo(() => {
     const radius = 2;
@@ -112,16 +118,19 @@ function Cubes({ hoveredIndex, hoverColor }: { hoveredIndex: number; hoverColor:
   );
 }
 
-export default function MarbleScene({ hoveredIndex, hoverColor }: { hoveredIndex: number; hoverColor: string | null; }) {
+export default function MarbleScene({ hoveredIndex, hoverColor, paused = false }: { hoveredIndex: number; hoverColor: string | null; paused?: boolean; }) {
   // OPTIMIZATION: State to control Device Pixel Ratio for performance.
   const [dpr, setDpr] = useState(1.5);
 
   return (
     <div style={{ width: '100%', height: '100%', pointerEvents: 'auto' }}>
-        <Canvas 
+        <Canvas
             gl={{ antialias: false, alpha: true }} // Disabling antialias can help, monitor will re-enable if performance allows
             camera={{ position: [0, 0, 15], fov: 25 }}
             dpr={dpr} // Control DPR based on performance
+            // Once GSAP fades the scene out past the about section it's
+            // invisible but would keep rendering — stop the loop instead.
+            frameloop={paused ? 'demand' : 'always'}
         >
             {/* OPTIMIZATION: This component will monitor performance and adjust DPR */}
             <PerformanceMonitor 

@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import FluidEffect from "./components/FluidEffect"; // Import the new component
+import InitialLoader from "./components/InitialLoader";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -14,8 +15,18 @@ const imperial = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "MATTHEW SUSKO",
-  description: "Welcome to my portfolio",
+  title: {
+    default: "MATTHEW SUSKO",
+    template: "%s — MATTHEW SUSKO",
+  },
+  description:
+    "Portfolio of Matthew Susko, a Canada-based computer scientist specializing in user experience, design, and interaction.",
+  openGraph: {
+    title: "MATTHEW SUSKO",
+    description:
+      "Portfolio of Matthew Susko, a Canada-based computer scientist specializing in user experience, design, and interaction.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
@@ -28,6 +39,7 @@ export default function RootLayout({
       <body className={`${inter.variable} ${imperial.variable}`}>
         <FluidEffect />
         <div style={{ position: "relative", zIndex: 2 }}>{children}</div>
+        <InitialLoader />
       </body>
     </html>
   );
