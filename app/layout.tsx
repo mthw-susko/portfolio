@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import FluidEffect from "./components/FluidEffect"; // Import the new component
+import InitialLoader from "./components/InitialLoader";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -38,6 +39,7 @@ export default function RootLayout({
       <body className={`${inter.variable} ${imperial.variable}`}>
         <FluidEffect />
         <div style={{ position: "relative", zIndex: 2 }}>{children}</div>
+        <InitialLoader />
       </body>
     </html>
   );
