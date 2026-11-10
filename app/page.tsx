@@ -7,17 +7,18 @@ import React from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useRouter } from "next/navigation";
-
 gsap.registerPlugin(ScrollTrigger);
 
+// Design work first; Drop leads because it's shipped and has real outcomes.
 const personalProjects = [
-  { name: "METRONOMICS", category: "WEB", href: "/projects/metronomics-redesign" },
-  { name: "QWEB", category: "WEB", href: "/projects/qweb-redesign" },
-  { name: "QGDC", category: "WEB", href: "/projects/qgdc-redesign" },
+  { name: "DROP", category: "IOS", href: "/projects/drop" },
   { name: "PLAYBACKD", category: "IOS", href: "/projects/playbackd" },
   { name: "REARVIEW", category: "IOS", href: "/projects/rearview" },
   { name: "QSWAP", category: "IOS", href: "/projects/qswap" },
   { name: "HOTTAKE", category: "IOS", href: "/projects/hottake" },
+  { name: "METRONOMICS", category: "WEB", href: "/projects/metronomics-redesign" },
+  { name: "QWEB", category: "WEB", href: "/projects/qweb-redesign" },
+  { name: "QGDC", category: "WEB", href: "/projects/qgdc-redesign" },
   { name: "MINTY PI", category: "HARDWARE", href: "/projects/mintypi" },
   { name: "RABBIT R1", category: "OS", href: "/projects/rabbit-r1" },
 ];
@@ -31,7 +32,7 @@ const getCategoryGroup = (category: string) => {
 export default function Home() {
   // --- All your existing state and refs ---
   // Keep these pastel — saturated colors render dark on the glass cubes (see MarbleScene).
-  const projectColors = useMemo(() => ['#ffb3b3', '#f0e68c', '#87ceeb', '#98fb98', '#dda0dd', '#ffc966', '#ffc0cb', '#40e0d0', '#c792ea'], []);
+  const projectColors = useMemo(() => ['#ffb3b3', '#f0e68c', '#87ceeb', '#98fb98', '#dda0dd', '#ffc966', '#ffc0cb', '#40e0d0', '#c792ea', '#ffd1a8'], []);
   const [hoveredIndex, setHoveredIndex] = useState(-1);
   const socials = [{ name: "LINKEDIN", href: "https://www.linkedin.com/in/matthew-mb-susko/" }, { name: "MAIL", href: "mailto:matthew@susko.ca" }, { name: "GITHUB", href: "https://github.com/mthw-susko" }];
   const [fontSize, setFontSize] = useState(5);
@@ -144,10 +145,20 @@ export default function Home() {
             <ShaderText fontSize={fontSize} height={"50vh"} lineHeight={0.8}>
               {`Matthew\nSusko`}
             </ShaderText>
-            <p className="text-base uppercase max-w-2xl lg:max-w-3xl mx-auto px-4">
-              A Canada-based computer scientist specializing in all things user
-              experience, design, and interaction
+            <p className="text-xs tracking-[0.3em] uppercase text-neutral-300 mx-auto px-4">
+              Product designer // MHCI at Carnegie Mellon
             </p>
+            <p className="mt-3 text-lg uppercase max-w-2xl lg:max-w-3xl mx-auto px-4">
+              I design and build apps that respect the people using them
+            </p>
+            <div className="mt-8 flex justify-center gap-12">
+              <a href="#works" className="text-sm tracking-widest uppercase hover:opacity-75 transition-opacity pointer-events-auto">
+                See my work
+              </a>
+              <a href="mailto:matthew@susko.ca" className="text-sm tracking-widest uppercase hover:opacity-75 transition-opacity pointer-events-auto">
+                Get in touch
+              </a>
+            </div>
           </div>
         </section>
         

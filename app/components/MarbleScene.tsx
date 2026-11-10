@@ -2,7 +2,20 @@
 "use client";
 
 import * as THREE from 'three';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+
+// Respect the OS "reduce motion" setting: render the cubes once and hold still.
+function usePrefersReducedMotion() {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setReduced(mq.matches);
+    const onChange = (e: MediaQueryListEvent) => setReduced(e.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+  return reduced;
+}
 import { Canvas, useFrame } from '@react-three/fiber';
 import { MeshTransmissionMaterial, Environment, PerformanceMonitor } from '@react-three/drei';
 
@@ -121,6 +134,7 @@ function Cubes({ hoveredIndex, hoverColor }: { hoveredIndex: number; hoverColor:
 export default function MarbleScene({ hoveredIndex, hoverColor, paused = false }: { hoveredIndex: number; hoverColor: string | null; paused?: boolean; }) {
   // OPTIMIZATION: State to control Device Pixel Ratio for performance.
   const [dpr, setDpr] = useState(1.5);
+  const reducedMotion = usePrefersReducedMotion();
 
   return (
     <div style={{ width: '100%', height: '100%', pointerEvents: 'auto' }}>
@@ -130,7 +144,7 @@ export default function MarbleScene({ hoveredIndex, hoverColor, paused = false }
             dpr={dpr} // Control DPR based on performance
             // Once GSAP fades the scene out past the about section it's
             // invisible but would keep rendering — stop the loop instead.
-            frameloop={paused ? 'demand' : 'always'}
+            frameloop={paused || reducedMotion ? 'demand' : 'always'}
         >
             {/* OPTIMIZATION: This component will monitor performance and adjust DPR */}
             <PerformanceMonitor 

@@ -16,6 +16,20 @@ export interface Project {
 
 export const projectsData: Project[] = [
   {
+    slug: 'drop',
+    title: 'Drop Album Discovery App',
+    description:
+      'Most music apps want you scrolling forever. I wanted to see if I could design an app people would pay for without the usual tricks to keep them hooked. Drop recommends one album a day, and every pick shows a short reason why it was chosen, so you can see the logic and decide whether to trust it. It is private by default, with no accounts, and your data stays on your device. I skipped weekly pricing on purpose because it felt too close to the subscription traps I was designing against. I designed and built it alone in SwiftUI and launched it on the App Store in June 2026. In the first 45 days it had about 1,350 downloads and started making money. I reply to every piece of feedback myself. One reply turned up a bug that was deleting a paying user\'s entries, and others led straight to features like logging albums you already know.',
+    details: {
+      agency: 'PERSONAL PROJECT',
+      job: 'PRODUCT DESIGN, IOS DEVELOPMENT',
+      position: 'FOUNDER / LEAD DESIGNER',
+      stack: 'SWIFTUI, FIGMA',
+      year: '2026',
+    },
+    images: ['/images/drop-1.jpg', '/images/drop-2.jpg', '/images/drop-3.jpg', '/images/drop-4.jpg', '/images/drop-5.jpg'],
+  },
+  {
     slug: 'metronomics-redesign',
     title: 'Metronomics Application Redesign',
     description:
